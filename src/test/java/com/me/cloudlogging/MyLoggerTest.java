@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
@@ -15,61 +16,42 @@ import ch.qos.logback.classic.Logger;
 
 public class MyLoggerTest {
 	
-	@Test
-	public void givenMyLoggerWhenCalledInfoLogThenShouldLogAnInformationAndVerifyItThroughAnAppender() {
-		// preparation
-		ListAppender<ILoggingEvent> appenders = new ListAppender<>();
+	ListAppender<ILoggingEvent> appenders = new ListAppender<>();
+	Logger logger = (Logger) LoggerFactory.getLogger(MyLogger.class);
+	List<ILoggingEvent> logs = appenders.list;
+	
+	@Before
+	public void setup() {
+		appenders.clearAllFilters();
 		appenders.start();
 		
-		Logger logger = (Logger) LoggerFactory.getLogger(MyLogger.class);
+		logger.detachAndStopAllAppenders();
 		logger.addAppender(appenders);
 		
-		// action
+		logs.clear();
+	}
+	
+	@Test
+	public void givenMyLoggerWhenCalledInfoLogThenShouldLogAnInformationAndVerifyItThroughAnAppender() {
 		MyLogger.infoLog();
 		
-		List<ILoggingEvent> logs = appenders.list;
-		
-		// verification
 		assertEquals("mylog.logger.info", logs.get(0).getMessage());
 		assertEquals(Level.INFO, logs.get(0).getLevel());
 	}
 	
 	@Test
 	public void givenMyLoggerWhenCalledErrorLogThenShouldLogAnInformationAndVerifyItThroughAnAppender() {
-		// preparation
-		ListAppender<ILoggingEvent> appenders = new ListAppender<>();
-		appenders.start();
-		
-		Logger logger = (Logger) LoggerFactory.getLogger(MyLogger.class);
-		logger.addAppender(appenders);
-		
-		// action
 		MyLogger.errorLog();
-		
-		List<ILoggingEvent> logs = appenders.list;
-		
-		// verification
+	
 		assertEquals("mylog.logger.error", logs.get(0).getMessage());
 		assertEquals(Level.ERROR, logs.get(0).getLevel());
 	}
 	
 	@Test
 	public void givenMyLoggerWhenCalledDebugLogThenShouldNotLogAsItIsBelowThreshold() {
-		// preparation
-		ListAppender<ILoggingEvent> appenders = new ListAppender<>();
-		appenders.start();
-		
-		Logger logger = (Logger) LoggerFactory.getLogger(MyLogger.class);
-		logger.addAppender(appenders);
-		
-		// action
 		MyLogger.debugLog();
 		
-		List<ILoggingEvent> logs = appenders.list;
-		
-		// verification
 		assertTrue(logs.isEmpty());
 	}
 	
-
 }
