@@ -5,11 +5,18 @@ import org.slf4j.LoggerFactory;
 
 public class MyLogger {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MyLogger.class);
+	static final Logger logger = LoggerFactory.getLogger(MyLogger.class);
 	
-	public static void log() {
+	public static void infoLog() {
 		logger.info("mylog.logger.info");
+	}
+	
+	public static void errorLog() {
 		logger.error("mylog.logger.error");
+		
+	}
+	
+	public static void debugLog() {
 		logger.debug("mylog.logger.debug");
 	}
 	
